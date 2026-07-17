@@ -36,12 +36,9 @@ apiClient.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // Handle session expiration and suspension
-    if (error.response.status === 401 || error.response.status === 403) {
+    // Handle session expiration (401 Unauthorized)
+    if (error.response.status === 401) {
       localStorage.removeItem("commondesk_token");
-      if (error.response.status === 403) {
-         localStorage.removeItem("commondesk_workspace"); // Also clear workspace on 403
-      }
       
       // Only redirect if not already on auth pages
       if (!window.location.pathname.startsWith('/auth')) {

@@ -12,10 +12,6 @@ export const handleLocalUpload = async (workspaceId: string, userId: string, fil
   
   if (!membership) throw { status: 403, message: "Forbidden" };
   const isAdmin = membership.role.name === "ADMIN";
-  
-  if (!data.projectId && !data.taskId && !isAdmin) {
-    throw { status: 403, message: "Members cannot upload Workspace Documents." };
-  }
 
   const attachment = await prisma.attachment.create({
     data: {
