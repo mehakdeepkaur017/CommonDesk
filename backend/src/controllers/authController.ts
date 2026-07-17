@@ -88,7 +88,7 @@ export const uploadAvatar = async (req: Request, res: Response, next: NextFuncti
     if (!req.file) {
       return res.status(400).json({ error: "No file uploaded" });
     }
-    const avatarUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+    const avatarUrl = `/uploads/${req.file.filename}`;
     const user = await authService.updateAvatar(userId, avatarUrl);
     res.status(200).json({ user, avatarUrl });
   } catch (error) {

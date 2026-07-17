@@ -1,4 +1,5 @@
 import React from 'react';
+import { resolveImageUrl } from '../../utils/resolveImageUrl';
 
 interface WorkspaceAvatarProps {
   name: string;
@@ -23,13 +24,9 @@ export const WorkspaceAvatar: React.FC<WorkspaceAvatarProps> = ({
   className = ''
 }) => {
   const initials = name ? name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'W';
-  
-  if (logoUrl) {
-    const baseUrl = import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'http://localhost:5000';
-    const fullLogoUrl = logoUrl.startsWith('http') 
-      ? logoUrl 
-      : `${baseUrl}${logoUrl.startsWith('/') ? '' : '/'}${logoUrl}`;
+  const fullLogoUrl = resolveImageUrl(logoUrl);
 
+  if (fullLogoUrl) {
     return (
       <div className={`rounded-xl overflow-hidden shrink-0 shadow-lg ${sizeClasses[size]} ${className}`}>
         <img src={fullLogoUrl} alt={name} className="w-full h-full object-cover" />

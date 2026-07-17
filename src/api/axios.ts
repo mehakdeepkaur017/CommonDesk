@@ -24,9 +24,28 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+// Resolve relative image URLs in API responses to absolute URLs
+const API_BASE = (import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1").replace('/api/v1', '');
+const IMAGE_URL_FIELDS = ['avatarUrl', 'logoUrl', 'secureUrl'];
+
+const resolveUrls = (obj: any): any => {
+  if (!obj || typeof obj !== 'object') return obj;
+  if (Array.isArray(obj)) return obj.map(resolveUrls);
+  
+  const result = { ...obj };
+  for (const key of Object.keys(result)) {
+    if (IMAGE_URL_FIELDS.includes(key) && typeof result[key] === 'string' && result[key] && !result[key].startsWith('http')) {
+      result[key] = `${API_BASE}${result[key].startsWith('/') ? '' : '/'}${result[key]}`;
+    } else if (typeof result[key] === 'object' && result[key] !== null) {
+      result[key] = resolveUrls(result[key]);
+    }
+  }
+  return result;
+};
+
 // Response Interceptor
 apiClient.interceptors.response.use(
-  (response) => response.data,
+  (response) => resolveUrls(response.data),
   (error) => {
     // Handle Network Errors
     if (!error.response) {
