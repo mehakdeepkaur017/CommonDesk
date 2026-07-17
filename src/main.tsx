@@ -9,6 +9,11 @@ import { ThemeProvider } from './context/ThemeContext'
 import './index.css'
 import App from './App.tsx'
 
+// Handle Vite dynamic import chunk errors at the root level
+window.addEventListener('vite:preloadError', () => {
+  window.location.reload();
+});
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
