@@ -391,11 +391,6 @@ export const TaskSlideOut = ({ task: initialTask, onClose }: Props) => {
                     </div>
                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
                       <button onClick={() => setPreviewFile(file)} className="p-1.5 rounded-md text-text-muted hover:text-brand-indigo hover:bg-brand-indigo/10" title="Preview"><Eye className="w-4 h-4" /></button>
-                      {file.archived ? (
-                        <button onClick={() => handleRestore(file.id)} className="p-1.5 rounded-md text-text-muted hover:text-emerald-400 hover:bg-emerald-500/10" title="Restore"><RefreshCw className="w-4 h-4" /></button>
-                      ) : (
-                        <button onClick={() => handleDelete(file.id, false)} className="p-1.5 rounded-md text-text-muted hover:text-orange-400 hover:bg-orange-400/10" title="Archive"><Archive className="w-4 h-4" /></button>
-                      )}
                       <button onClick={() => handleDelete(file.id, true)} className="p-1.5 rounded-md text-text-muted hover:text-red-400 hover:bg-red-500/10" title="Delete"><Trash2 className="w-4 h-4" /></button>
                     </div>
                   </div>

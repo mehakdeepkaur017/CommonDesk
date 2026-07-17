@@ -100,27 +100,10 @@ export const ProjectFilesTab = ({ projectId }: Props) => {
                         >
                           <Eye className="w-4 h-4" />
                         </button>
-                        {file.archived ? (
-                          <button 
-                            onClick={() => handleRestore(file.id)}
-                            className="p-1.5 rounded-md text-text-muted hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors"
-                            title="Restore"
-                          >
-                            <RefreshCw className="w-4 h-4" />
-                          </button>
-                        ) : (
-                          <button 
-                            onClick={() => handleDelete(file.id, false)}
-                            className="p-1.5 rounded-md text-text-muted hover:text-orange-400 hover:bg-orange-400/10 transition-colors"
-                            title="Archive"
-                          >
-                            <Archive className="w-4 h-4" />
-                          </button>
-                        )}
                         <button 
                           onClick={() => handleDelete(file.id, true)}
                           className="p-1.5 rounded-md text-text-muted hover:text-rose-500 hover:bg-rose-500/10 transition-colors"
-                          title="Delete Forever"
+                          title="Delete"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
