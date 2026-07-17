@@ -95,35 +95,7 @@ export const AuthLayout = () => {
                 {content.subtitle}
               </p>
               
-              <div className="glass-card p-6 rounded-2xl border border-surface-border bg-black/[0.02] dark:bg-background shadow-2xl relative">
-                <div className="absolute top-0 right-4 -translate-y-1/2">
-                  <div className="px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 flex items-center gap-1.5">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    JWT Secured
-                  </div>
-                </div>
-                <div className="flex -space-x-4 mb-4">
-                    {content.icons ? (
-                      content.icons.map((item, i) => (
-                        <div key={i} className={`w-10 h-10 rounded-full border-2 border-background bg-gradient-to-br ${item.color} flex items-center justify-center text-text-primary font-medium text-sm`}>
-                          {item.icon}
-                        </div>
-                      ))
-                    ) : content.textIcons ? (
-                      content.textIcons.map((user, i) => (
-                        <div key={i} className={`w-10 h-10 rounded-full border-2 border-background bg-gradient-to-br ${user.color} flex items-center justify-center text-text-primary font-medium text-sm`}>
-                          {user.name}
-                        </div>
-                      ))
-                    ) : null}
-                  {!content.icons && (
-                    <div className="w-10 h-10 rounded-full border-2 border-background bg-surface flex items-center justify-center text-xs font-medium text-text-primary">
-                      +2k
-                    </div>
-                  )}
-                </div>
-                <p className="text-sm text-text-primary font-medium">{content.stats}</p>
-              </div>
+
             </motion.div>
           </AnimatePresence>
         </div>
