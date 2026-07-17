@@ -25,9 +25,10 @@ export const WorkspaceAvatar: React.FC<WorkspaceAvatarProps> = ({
   const initials = name ? name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'W';
   
   if (logoUrl) {
+    const baseUrl = import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'http://localhost:5000';
     const fullLogoUrl = logoUrl.startsWith('http') 
       ? logoUrl 
-      : `${import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'http://localhost:5000'}${logoUrl}`;
+      : `${baseUrl}${logoUrl.startsWith('/') ? '' : '/'}${logoUrl}`;
 
     return (
       <div className={`rounded-xl overflow-hidden shrink-0 shadow-lg ${sizeClasses[size]} ${className}`}>
