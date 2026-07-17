@@ -5,6 +5,7 @@ import * as tokenRepository from "../repositories/tokenRepository";
 import { hashPassword, comparePassword, generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../utils/authUtils";
 import prisma from "../lib/prisma";
 import * as notificationService from "./notificationService";
+import { logAudit } from "./auditService";
 
 const generateJoinCode = () => {
   return 'CD-' + Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -58,6 +59,17 @@ export const registerOrg = async (data: z.infer<typeof registerOrgSchema>) => {
   const accessToken = generateAccessToken(result.user.id);
   const refreshToken = generateRefreshToken(result.user.id);
   await tokenRepository.saveRefreshToken(refreshToken, result.user.id);
+
+  // Audit: workspace creation
+  await logAudit({
+    workspaceId: result.workspace.id,
+    userId: result.user.id,
+    action: "WORKSPACE_CREATED",
+    entityType: "Workspace",
+    entityName: result.workspace.name,
+    entityId: result.workspace.id,
+    category: "Workspace",
+  });
 
   return { 
     user: { id: result.user.id, email: result.user.email, name: result.user.name, role: result.user.role }, 
@@ -121,6 +133,17 @@ export const joinOrg = async (data: z.infer<typeof joinOrgSchema>) => {
   const refreshToken = generateRefreshToken(result.user.id);
   await tokenRepository.saveRefreshToken(refreshToken, result.user.id);
 
+  // Audit: member join request
+  await logAudit({
+    workspaceId: workspace.id,
+    userId: result.user.id,
+    action: "MEMBER_JOIN_REQUESTED",
+    entityType: "Membership",
+    entityName: result.user.name,
+    entityId: result.joinRequest.id,
+    category: "Members",
+  });
+
   return { 
     user: { id: result.user.id, email: result.user.email, name: result.user.name, role: result.user.role }, 
     joinRequest: result.joinRequest, 
@@ -143,6 +166,25 @@ export const login = async (data: z.infer<typeof loginSchema>) => {
   const accessToken = generateAccessToken(user.id);
   const refreshToken = generateRefreshToken(user.id);
   await tokenRepository.saveRefreshToken(refreshToken, user.id);
+
+  // Audit: login event across all user workspaces
+  try {
+    const memberships = await prisma.membership.findMany({
+      where: { userId: user.id, status: "active" },
+      select: { workspaceId: true },
+    });
+    for (const m of memberships) {
+      await logAudit({
+        workspaceId: m.workspaceId,
+        userId: user.id,
+        action: "LOGIN",
+        entityType: "Auth",
+        entityName: user.email,
+        entityId: user.id,
+        category: "Security",
+      });
+    }
+  } catch (_) { /* never fail login for audit */ }
 
   return { user: { id: user.id, email: user.email, name: user.name, avatarUrl: user.avatarUrl, role: user.role }, accessToken, refreshToken };
 };

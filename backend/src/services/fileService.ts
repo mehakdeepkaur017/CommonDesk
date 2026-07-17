@@ -1,5 +1,6 @@
 import prisma from "../lib/prisma";
 import { logActivity } from "./activityService";
+import { logAudit } from "./auditService";
 import fs from "fs";
 import path from "path";
 
@@ -33,6 +34,14 @@ export const handleLocalUpload = async (workspaceId: string, userId: string, fil
   });
 
   await logActivity(workspaceId, userId, "FILE_UPLOADED", data.projectId || undefined, data.taskId || undefined, { fileId: attachment.id, filename: file.originalname });
+  await logAudit({
+    workspaceId,
+    userId,
+    action: "FILE_UPLOADED",
+    entityType: "File",
+    entityName: file.originalname,
+    entityId: attachment.id,
+  });
 
   return attachment;
 };
@@ -74,6 +83,15 @@ export const handleNewVersionUpload = async (fileId: string, workspaceId: string
   });
 
   await logActivity(workspaceId, userId, "FILE_VERSION_CREATED", attachment.projectId || undefined, attachment.taskId || undefined, { fileId, filename: attachment.filename, version: newVersion });
+  await logAudit({
+    workspaceId,
+    userId,
+    action: "FILE_VERSION_CREATED",
+    entityType: "File",
+    entityName: attachment.filename,
+    entityId: fileId,
+    details: { version: newVersion },
+  });
   return updated;
 };
 
@@ -144,10 +162,13 @@ export const updateFile = async (fileId: string, workspaceId: string, userId: st
 
   if (data.filename && data.filename !== attachment.filename) {
     await logActivity(workspaceId, userId, "FILE_RENAMED", attachment.projectId || undefined, attachment.taskId || undefined, { fileId, oldName: attachment.filename, newName: data.filename });
+    await logAudit({ workspaceId, userId, action: "FILE_RENAMED", entityType: "File", entityName: data.filename, entityId: fileId, details: { oldName: attachment.filename, newName: data.filename } });
   } else if (data.archived !== undefined) {
     await logActivity(workspaceId, userId, data.archived ? "FILE_DELETED" : "FILE_RESTORED", attachment.projectId || undefined, attachment.taskId || undefined, { fileId, filename: attachment.filename });
+    await logAudit({ workspaceId, userId, action: data.archived ? "FILE_ARCHIVED" : "FILE_RESTORED", entityType: "File", entityName: attachment.filename, entityId: fileId });
   } else {
     await logActivity(workspaceId, userId, "FILE_MOVED", attachment.projectId || undefined, attachment.taskId || undefined, { fileId, filename: attachment.filename });
+    await logAudit({ workspaceId, userId, action: "FILE_UPDATED", entityType: "File", entityName: attachment.filename, entityId: fileId, details: data });
   }
 
   return updated;
@@ -170,6 +191,7 @@ export const deleteFile = async (fileId: string, workspaceId: string, userId: st
 
   await prisma.attachment.delete({ where: { id: fileId } });
   await logActivity(workspaceId, userId, "FILE_DELETED", attachment.projectId || undefined, attachment.taskId || undefined, { filename: attachment.filename });
+  await logAudit({ workspaceId, userId, action: "FILE_DELETED", entityType: "File", entityName: attachment.filename, entityId: fileId });
 };
 
 export const getStorageStats = async (workspaceId: string) => {
