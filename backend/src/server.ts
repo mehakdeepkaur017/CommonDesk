@@ -68,7 +68,12 @@ app.use("/api/v1/search", searchRoutes);
 app.use("/api/v1/files", fileRoutes);
 
 // Static Uploads
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+app.use("/uploads", (req, res, next) => {
+  if (req.query.download === '1') {
+    res.setHeader('Content-Disposition', 'attachment');
+  }
+  next();
+}, express.static(path.join(process.cwd(), "uploads")));
 
 // Error Handling
 app.use(notFoundHandler);
