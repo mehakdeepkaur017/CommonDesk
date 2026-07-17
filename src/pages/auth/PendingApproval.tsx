@@ -102,7 +102,7 @@ export const PendingApproval = () => {
 
         <div className="p-4 bg-surface-hover rounded-xl mb-8">
           <p className="text-sm text-text-muted">
-            You will receive an email notification once your request has been reviewed.
+            Please check back later and sign in once your request has been reviewed by an administrator.
           </p>
         </div>
 

@@ -72,7 +72,7 @@ export const JoinOrganization = () => {
         
         <h2 className="text-3xl font-bold font-heading mb-2 text-text-primary">Request Sent!</h2>
         <p className="text-text-secondary mb-8">
-          Your request to join the workspace has been sent successfully. You will receive an email once an administrator approves your request.
+          Your request to join the workspace has been sent successfully. Please check back later and sign in once an administrator approves your request.
         </p>
 
         <div className="bg-surface border border-surface-border rounded-xl p-6 flex items-center gap-4 text-left">
