@@ -67,7 +67,7 @@ export const AuditCenter = () => {
     try {
       toast({ title: 'Export Started', description: 'Your security log export is being generated.', type: 'info' });
       
-      const res = await apiClient.get('/workspaces/audit-logs', {
+      const res = await apiClient.get('/workspaces/current/audit-logs', {
         params: {
           q: debouncedSearch || undefined,
           category: category || undefined,
@@ -76,7 +76,7 @@ export const AuditCenter = () => {
         }
       });
 
-      const exportLogs = res.data.logs || [];
+      const exportLogs = (res as any).logs || [];
       if (exportLogs.length === 0) {
         toast({ title: 'Export Failed', description: 'No logs found to export.', type: 'error' });
         return;
