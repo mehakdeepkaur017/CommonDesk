@@ -17,7 +17,7 @@ router.post("/", workspaceController.createWorkspace);
 
 // Routes that DO require a specific workspace context
 router.get("/current", requireWorkspace, workspaceController.getCurrentWorkspace);
-router.get("/audit-logs", requireWorkspace, requireRole(["ADMIN"]), workspaceController.getAuditLogs);
+router.get("/current/audit-logs", requireWorkspace, requireRole(["ADMIN"]), workspaceController.getAuditLogs);
 router.patch("/current", requireWorkspace, requireRole(["ADMIN"]), validateRequest(updateWorkspaceSchema), workspaceController.updateWorkspace);
 router.delete("/current", requireWorkspace, requireRole(["ADMIN"]), workspaceController.deleteWorkspace);
 
