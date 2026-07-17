@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Search, Filter, Download, Calendar, Activity, 
-  ShieldAlert, AlertCircle, Clock, ChevronLeft, ChevronRight
+  ShieldAlert, AlertCircle, Clock, ChevronLeft, ChevronRight, User
 } from 'lucide-react';
 import { Button } from '../../../components/ui/Button';
 import { useToast } from '../../../components/feedback/ToastContext';
