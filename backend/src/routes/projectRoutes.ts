@@ -19,9 +19,9 @@ router.get("/:id",
   projectController.getProject
 );
 
-// For updating project, require owner or manager
+// For updating project, require owner or manager or member
 router.patch("/:id", 
-  requireProjectRole(["owner", "manager"], req => req.params.id as string), 
+  requireProjectRole(["owner", "manager", "member"], req => req.params.id as string), 
   validateRequest(updateProjectSchema), 
   projectController.updateProject
 );
