@@ -5,7 +5,7 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "nodemon --watch \"src/**/*.ts\" --exec tsx src/server.ts",
-    "build": "tsc",
+    "build": "tsc && node -e \"require('fs').copyFileSync('src/swagger.yaml', 'dist/swagger.yaml')\"",
     "start": "node dist/server.js",
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push"
