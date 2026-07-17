@@ -36,7 +36,18 @@ export const FilePreviewDrawer = ({ file, isOpen, onClose }: { file: any; isOpen
       return <img src={url} alt={file.filename} className="w-full h-auto rounded-lg object-contain max-h-[60vh]" />;
     }
     if (file.format === 'application/pdf') {
-      return <object data={url} type="application/pdf" className="w-full h-[60vh] rounded-lg" />;
+      const googleViewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`;
+      return (
+        <div className="space-y-3">
+          <iframe src={googleViewerUrl} className="w-full h-[60vh] rounded-lg border border-surface-border" title="PDF Preview" />
+          <button 
+            onClick={() => window.open(url, '_blank')}
+            className="text-xs text-brand-indigo hover:underline"
+          >
+            Open PDF in new tab ↗
+          </button>
+        </div>
+      );
     }
     
     return (
