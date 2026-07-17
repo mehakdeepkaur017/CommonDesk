@@ -30,7 +30,8 @@ export const FilePreviewDrawer = ({ file, isOpen, onClose }: { file: any; isOpen
 
   const renderPreview = () => {
     if (!file) return null;
-    const url = `http://localhost:5000${file.secureUrl}`;
+    const baseUrl = import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'http://localhost:5000';
+    const url = `${baseUrl}${file.secureUrl}`;
     
     if (file.format.startsWith('image/')) {
       return <img src={url} alt={file.filename} className="w-full h-auto rounded-lg object-contain max-h-[60vh]" />;
