@@ -22,6 +22,12 @@ export class GlobalErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    const isChunkLoadError = error.name === 'ChunkLoadError' || error.message.includes('Failed to fetch dynamically imported module');
+    if (isChunkLoadError) {
+      window.location.reload();
+      return;
+    }
+    
     console.error("🔴 UNCAUGHT ERROR:", error.message);
     console.error("🔴 ERROR STACK:", error.stack);
     console.error("🔴 COMPONENT STACK:", errorInfo.componentStack);
@@ -33,6 +39,9 @@ export class GlobalErrorBoundary extends Component<Props, State> {
 
   render() {
     if (this.state.hasError) {
+      const isChunkLoadError = this.state.errorMessage.includes('Failed to fetch dynamically imported module') || this.state.errorMessage.includes('ChunkLoadError');
+      if (isChunkLoadError) return null;
+
       return (
         <div className="min-h-screen bg-surface flex flex-col items-center justify-center gap-6">
           <Error500 />
