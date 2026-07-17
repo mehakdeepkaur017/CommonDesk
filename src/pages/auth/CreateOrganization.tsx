@@ -11,7 +11,7 @@ import { Button } from "../../components/ui/Button";
 import { useAuth } from "../../context/AuthContext";
 import { AuthService } from "../../services/auth.service";
 import { WorkspaceService } from "../../services/workspace.service";
-import { useQuery } from "@tanstack/react-query";
+
 
 const createOrgSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -70,12 +70,7 @@ export const CreateOrganization = () => {
 
   const joinLink = `${window.location.origin}/auth/join-organization?code=${successData?.joinCode}`;
 
-  const { data: stats } = useQuery({
-    queryKey: ['workspace-stats', successData?.joinCode],
-    queryFn: WorkspaceService.getWorkspaceStats,
-    enabled: !!successData,
-    refetchInterval: 3000,
-  });
+
 
   if (successData) {
     return (
@@ -95,37 +90,15 @@ export const CreateOrganization = () => {
           Your workspace is ready. Invite your team using the unique join code below.
         </p>
 
-        <div className="grid grid-cols-3 gap-4 mb-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-            className="bg-surface border border-surface-border rounded-2xl p-4 flex flex-col items-center justify-center"
-          >
-            <Users className="w-5 h-5 text-brand-indigo mb-2" />
-            <span className="text-2xl font-bold text-text-primary">{stats?.membersCount || 1}</span>
-            <span className="text-xs text-text-muted mt-1 uppercase font-bold tracking-wider">Members</span>
-          </motion.div>
-          
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-            className="bg-surface border border-surface-border rounded-2xl p-4 flex flex-col items-center justify-center relative overflow-hidden"
-          >
-            <Clock className="w-5 h-5 text-amber-500 mb-2" />
-            <span className="text-2xl font-bold text-text-primary">{stats?.pendingRequestsCount || 0}</span>
-            <span className="text-xs text-text-muted mt-1 uppercase font-bold tracking-wider text-center leading-tight">Requests</span>
-            {stats?.pendingRequestsCount > 0 && (
-              <div className="absolute top-0 right-0 w-2 h-2 m-2 rounded-full bg-amber-500 animate-pulse" />
-            )}
-          </motion.div>
-
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-            className="bg-surface border border-surface-border rounded-2xl p-4 flex flex-col items-center justify-center"
-          >
-            <Folder className="w-5 h-5 text-emerald-500 mb-2" />
-            <span className="text-2xl font-bold text-text-primary">{stats?.projectsCount || 0}</span>
-            <span className="text-xs text-text-muted mt-1 uppercase font-bold tracking-wider">Projects</span>
-          </motion.div>
-        </div>
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+          className="bg-brand-indigo/10 border border-brand-indigo/20 rounded-2xl p-4 mb-8 flex items-center justify-center gap-3"
+        >
+          <Clock className="w-5 h-5 text-brand-indigo" />
+          <span className="text-sm text-brand-indigo font-medium">
+            Remember to approve member join requests once you access your Admin Console.
+          </span>
+        </motion.div>
 
         <div className="bg-surface border border-surface-border rounded-2xl p-6 mb-8 text-left space-y-6">
           <div>
