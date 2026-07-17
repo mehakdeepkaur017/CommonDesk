@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Menu, Search, Bell, Building2, ChevronDown, User, LogOut, Settings } from 'lucide-react';
 import { useWorkspace } from '../../../hooks/queries/useWorkspace';
 import { useAuth } from '../../../context/AuthContext';
@@ -12,6 +12,7 @@ import { CommandPalette } from '../../ui/CommandPalette';
 import { useNotifications } from '../../../hooks/queries/useNotifications';
 import { NotificationItem } from '../../ui/NotificationItem';
 import { CheckCircle2 } from 'lucide-react';
+import { useClickOutside } from '../../../hooks/useClickOutside';
 
 export const AdminTopNavigation = ({ onOpenSidebar }: { onOpenSidebar: () => void }) => {
   const { data: workspace } = useWorkspace();
@@ -21,6 +22,12 @@ export const AdminTopNavigation = ({ onOpenSidebar }: { onOpenSidebar: () => voi
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const navigate = useNavigate();
   const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
+
+  const notificationsRef = useRef<HTMLDivElement>(null);
+  useClickOutside(notificationsRef, () => setIsNotificationsOpen(false));
+
+  const profileRef = useRef<HTMLDivElement>(null);
+  useClickOutside(profileRef, () => setIsProfileOpen(false));
 
   const { data: stats } = useQuery({
     queryKey: ['workspace-stats', workspace?.id],
@@ -85,7 +92,7 @@ export const AdminTopNavigation = ({ onOpenSidebar }: { onOpenSidebar: () => voi
         <ThemeSwitcher />
 
         {/* Notifications */}
-        <div className="relative">
+        <div className="relative" ref={notificationsRef}>
           <button 
             onClick={() => {
               setIsNotificationsOpen(!isNotificationsOpen);
@@ -102,7 +109,6 @@ export const AdminTopNavigation = ({ onOpenSidebar }: { onOpenSidebar: () => voi
           <AnimatePresence>
             {isNotificationsOpen && (
               <>
-                <div className="fixed inset-0 z-40" onClick={() => setIsNotificationsOpen(false)} />
                 <motion.div
                   initial={{ opacity: 0, y: 10, scale: 0.95, filter: "blur(4px)" }}
                   animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
@@ -165,7 +171,7 @@ export const AdminTopNavigation = ({ onOpenSidebar }: { onOpenSidebar: () => voi
         </div>
 
         {/* Profile Menu */}
-        <div className="relative ml-2">
+        <div className="relative ml-2" ref={profileRef}>
           <button 
             onClick={() => {
               setIsProfileOpen(!isProfileOpen);
@@ -183,7 +189,6 @@ export const AdminTopNavigation = ({ onOpenSidebar }: { onOpenSidebar: () => voi
           <AnimatePresence>
             {isProfileOpen && (
               <>
-                <div className="fixed inset-0 z-40" onClick={() => setIsProfileOpen(false)} />
                 <motion.div
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}

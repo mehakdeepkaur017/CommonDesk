@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Search, Plus, Bell, ChevronRight, Menu, CheckCircle2, UserCircle, Settings as SettingsIcon, LogOut } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -8,6 +8,7 @@ import { ThemeSwitcher } from "../../ui/ThemeSwitcher";
 import { Button } from "../../ui/Button";
 import { useNotifications } from "../../../hooks/queries/useNotifications";
 import { NotificationItem } from "../../ui/NotificationItem";
+import { useClickOutside } from "../../../hooks/useClickOutside";
 
 export const TopToolbar = () => {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
@@ -17,6 +18,12 @@ export const TopToolbar = () => {
   const { data: workspace } = useWorkspace();
   const { user, logout } = useAuth();
   const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
+
+  const notificationsRef = useRef<HTMLDivElement>(null);
+  useClickOutside(notificationsRef, () => setIsNotificationsOpen(false));
+
+  const profileRef = useRef<HTMLDivElement>(null);
+  useClickOutside(profileRef, () => setIsProfileOpen(false));
 
   const handleSearchClick = () => {
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }));
@@ -94,7 +101,7 @@ export const TopToolbar = () => {
         </div>
 
         {/* Notifications Dropdown */}
-        <div className="relative">
+        <div className="relative" ref={notificationsRef}>
           <button 
             onClick={() => {
               setIsNotificationsOpen(!isNotificationsOpen);
@@ -114,7 +121,6 @@ export const TopToolbar = () => {
           <AnimatePresence>
             {isNotificationsOpen && (
               <>
-                <div className="fixed inset-0 z-40" onClick={() => setIsNotificationsOpen(false)} />
                 <motion.div
                   initial={{ opacity: 0, y: 10, scale: 0.95, filter: "blur(4px)" }}
                   animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
@@ -177,7 +183,7 @@ export const TopToolbar = () => {
         </div>
 
         {/* Profile & Dropdown */}
-        <div className="relative">
+        <div className="relative" ref={profileRef}>
           <button 
             onClick={() => {
               setIsProfileOpen(!isProfileOpen);
@@ -195,7 +201,6 @@ export const TopToolbar = () => {
           <AnimatePresence>
             {isProfileOpen && (
               <>
-                <div className="fixed inset-0 z-40" onClick={() => setIsProfileOpen(false)} />
                 <motion.div
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
