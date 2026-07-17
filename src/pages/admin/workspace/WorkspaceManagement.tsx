@@ -181,27 +181,13 @@ export const WorkspaceManagement = () => {
 
           {/* Core Info */}
           <section className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-8 border-b border-surface-border">
-            <div className="space-y-2">
+            <div className="space-y-2 col-span-1 md:col-span-2">
               <label className="text-sm font-medium text-text-primary">Workspace Name</label>
               <input 
                 {...register('name')}
                 className="w-full h-11 bg-surface-hover border border-surface-border rounded-xl px-4 text-sm text-text-primary focus:outline-none focus:border-brand-indigo transition-colors"
               />
               {errors.name && <p className="text-xs text-red-400 mt-1">{errors.name.message}</p>}
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-text-primary">Workspace URL</label>
-              <div className="flex">
-                <span className="h-11 px-4 bg-surface-hover border border-surface-border border-r-0 rounded-l-xl flex items-center text-sm text-text-muted select-none">
-                  app.commondesk.com/
-                </span>
-                <input 
-                  {...register('slug')}
-                  className="flex-1 h-11 bg-surface-hover border border-surface-border rounded-r-xl px-4 text-sm text-text-primary focus:outline-none focus:border-brand-indigo transition-colors"
-                />
-              </div>
-              {errors.slug && <p className="text-xs text-red-400 mt-1">{errors.slug.message}</p>}
             </div>
 
             <div className="space-y-2 col-span-1 md:col-span-2">
