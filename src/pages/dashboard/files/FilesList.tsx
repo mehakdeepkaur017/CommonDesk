@@ -271,16 +271,7 @@ export const FilesList = () => {
                             <button onClick={() => handleDownload(file.secureUrl, file.originalName || file.filename)} className="p-2 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface" title="Download">
                               <Download className="w-4 h-4" />
                             </button>
-                            {file.archived ? (
-                              <button onClick={() => handleRestore(file.id)} className="p-2 rounded-lg text-text-muted hover:text-emerald-400 hover:bg-emerald-500/10" title="Restore">
-                                <RefreshCw className="w-4 h-4" />
-                              </button>
-                            ) : (
-                              <button onClick={() => handleDelete(file.id, false)} className="p-2 rounded-lg text-text-muted hover:text-orange-400 hover:bg-orange-400/10" title="Archive">
-                                <Archive className="w-4 h-4" />
-                              </button>
-                            )}
-                            <button onClick={() => handleDelete(file.id, true)} className="p-2 rounded-lg text-text-muted hover:text-red-400 hover:bg-red-500/10" title="Delete Forever">
+                            <button onClick={() => handleDelete(file.id, true)} className="p-2 rounded-lg text-text-muted hover:text-red-400 hover:bg-red-500/10" title="Delete">
                               <Trash2 className="w-4 h-4" />
                             </button>
                           </div>
